@@ -30,6 +30,7 @@ int sendFile(const std::string & hostname, int portno, const char *filename)
     exit(1);
   }
 
+  
   // setup socket
   int sockfd, n;
   struct sockaddr_in serv_addr;
@@ -61,7 +62,13 @@ int sendFile(const std::string & hostname, int portno, const char *filename)
     error("ERROR connecting");
   
 
+  auto len = strlen(filename);
+  std::string filename_block;
+  filename_block += len;
+  filename_block += ' ';
+  filename_block += filename;
   int bytesRead = 0;
+  n = write(sockfd, filename_block.c_str(), filename_block.size());
   while ((bytesRead = fread(buffer, 1, BUFFER_SIZE, ifile)) > 0) { // read a chunk
     n = write(sockfd,buffer,bytesRead); // send a chunk
 //    std::cout << "wrote: " << buffer << std::endl;

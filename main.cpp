@@ -19,17 +19,25 @@ int usage(const char * app) {
 
 int main(int argc, char *argv[])
 {
-  if (argc !=5) return usage(argv[0]);
-  bool write = (!strcmp(argv[3],"write"));
-  if (!write && (strcmp(argv[3], "read"))) return usage(argv[0]);
-  std::string hostname = argv[1];
-  int port = atoi(argv[2]);
-  if (write) {
-    sendFile(hostname, port, argv[4]);
+  if (argc == 3) {
+    if (strcmp(argv[1],"read")) {
+      return usage(argv[0]);
+    } else {
+      int port = atoi(argv[2]);
+      return getFile(port);
+    }
   } else {
-    getFile(port, argv[4]);
+    if (argc == 5) {
+      if (strcmp(argv[1],"write")) {
+        return usage(argv[0]);
+      } else {
+        std::string hostname = argv[2];
+        int port = atoi(argv[3]);
+        return sendFile(hostname, port, argv[4]);
+      }
+    }
   }
-  return 0;
+  return usage(argv[0]);
 
  
 }

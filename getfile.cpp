@@ -12,14 +12,8 @@
 void error(const char *msg);
 
 
-int getFile(int portno, const char * filename) {
+int getFile(int portno) {
 
-  // open the file to save in
-  FILE *ofile = fopen(filename, "wb");
-  if (!ofile) {
-    error("Cannot open file");
-    exit(1);
-  }
 
   // setup socket
   int sockfd, newsockfd;
@@ -52,6 +46,24 @@ int getFile(int portno, const char * filename) {
     error("ERROR on accept");
 
   bzero(buffer,BUFFER_SIZE);
+
+  
+    n = read(newsockfd, buffer, 2);
+    auto flen = static_cast<int>(buffer[0]);
+    n = read(newsockfd, buffer, flen);
+    std::string newfname = buffer;
+    std::cout << newfname << std::endl;
+        bzero(buffer,BUFFER_SIZE);
+
+
+// open the file to save in
+        
+        FILE *ofile = fopen(newfname.c_str(), "wb");
+  if (!ofile) {
+    error("Cannot open file");
+    exit(1);
+  }
+
   while (n > 0) {
     n = read(newsockfd,buffer,BUFFER_SIZE); // read a chunk
     if (n < 0) error("ERROR reading from socket");
